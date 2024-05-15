@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nuscenes-pod
+  namespace: aiea-slugbotics
+spec:
+  containers:
+  - name: vol-container
+    image: dakshshah/aiea-slugbotics:dev
+    command: ["sh", "-c", sleep infinity]
+    resources:
+      limits:
+        memory: 8Gi
+        cpu: "4"
+        ephemeral-storage: 100Gi
+      requests:
+        memory: 1Gi
+        cpu: "1"
+        ephemeral-storage: 30Gi
+    volumeMounts:
+    - mountPath: /pvcvolume
+      name: jonathan-nuscenes
+  restartPolicy: Never
+  volumes:
+  - name: jonathan-nuscenes
+    persistentVolumeClaim:
+      claimName: jonathan-nuscenes
