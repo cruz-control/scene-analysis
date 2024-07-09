@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.8.0-base-ubuntu22.04
+FROM nvidia/cuda:11.8.0-devel-ubuntu22.04
 
 RUN apt-get update \
     && apt-get --assume-yes upgrade \
@@ -15,6 +15,12 @@ RUN wget \
     && bash Miniconda3-py38_23.11.0-2-Linux-x86_64.sh -b \
     && rm -f Miniconda3-py38_23.11.0-2-Linux-x86_64.sh 
 
+# mtr environment 
 RUN conda --version
 RUN conda init
-RUN conda create -yn "waymo-motion-prediction" python=3.8
+RUN conda create -yn "mtr" python=3.8 \
+    && conda install -yn "mtr" pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+RUN conda install -yn "mtr" -c conda-forge tensorboardX easydict
+RUN conda install -yn "mtr" -c conda-forge pyyaml scikit-image tqdm numpy 
+
+SHELL ["conda", "run", "-n", "mtr", "/bin/bash", "-c"]
